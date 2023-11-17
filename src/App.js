@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react'
 import { Oval } from 'react-loader-spinner'
 import logo from './logo.png'
 import axios from 'axios'
-const APIKey = process.env.REACT_APP_API_KEY
+const APIKey = '3535a6e481b04043b8116d1c5422f4c2'
 
 // Set AssemblyAI Axios Header
 const assemblyAI = axios.create({
@@ -79,7 +79,6 @@ const App = () => {
       })
       .then((res) => {
         setTranscriptID(res.data.id)
-
         checkStatusHandler()
       })
       .catch((err) => console.error(err))
