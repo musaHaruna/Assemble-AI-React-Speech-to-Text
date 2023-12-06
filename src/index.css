@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.mockup-code {
+ width: 90%;
+ margin: 1rem auto;
+}
