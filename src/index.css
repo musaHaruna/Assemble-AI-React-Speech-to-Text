@@ -3,6 +3,72 @@
 @tailwind utilities;
 
 .mockup-code {
- width: 90%;
- margin: 1rem auto;
+  width: 90%;
+  margin: 1rem auto;
+}
+
+body {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.upload-btn-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.upload-button {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.upload-btn-container input[type='file'] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.btn-primary {
+  margin-right: 0.5rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.flex-btns {
+  display: flex;
+  align-items: center;
+  margin: 4rem 0;
+}
+
+.rounded-full.bg-color {
+  background-color: brown;
+}
+
+.progress-wrapper {
+  width: 300px;
+  height: 10px;
+  border: 1px solid white;
+  border-radius: 2px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(63, 94, 251, 1) 0%,
+    rgba(252, 70, 107, 1) 100%
+  );
+  transition: 0.5s linear;
 }

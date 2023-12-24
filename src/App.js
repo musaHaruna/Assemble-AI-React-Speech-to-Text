@@ -1,7 +1,6 @@
 import MicRecorder from 'mic-recorder-to-mp3'
 import { useEffect, useState, useRef } from 'react'
 import { Oval } from 'react-loader-spinner'
-import logo from './logo.png'
 import axios from 'axios'
 
 const APIKey = 'f7414a29faab4049a0cb6c3cd01c1bba'
@@ -36,20 +35,6 @@ const App = () => {
 
   // State for upload progress
   const [uploadProgress, setUploadProgress] = useState(0)
-
-  const copyToClipboard = (text) => {
-    // Create a textarea element to hold the text
-    const textarea = document.createElement('textarea')
-    textarea.value = text
-    document.body.appendChild(textarea)
-
-    // Select and copy the text
-    textarea.select()
-    document.execCommand('copy')
-
-    // Remove the temporary textarea
-    document.body.removeChild(textarea)
-  }
 
   useEffect(() => {
     // Declares the recorder object and stores it inside of ref
@@ -105,6 +90,7 @@ const App = () => {
         .then((res) => setUploadURL(res.data.upload_url))
         .then(() => {
           // Submit the Upload URL to AssemblyAI and retrieve the Transcript ID
+
           assemblyAI
             .post('/transcript', {
               audio_url: uploadURL,
@@ -123,6 +109,7 @@ const App = () => {
     setIsLoading(true)
     try {
       await assemblyAI.get(`/transcript/${transcriptID}`).then((res) => {
+        setSelectedFile(null)
         setTranscriptData(res.data)
       })
     } catch (err) {
@@ -144,43 +131,42 @@ const App = () => {
     return () => clearInterval(interval)
   })
 
+  console.log(selectedFile)
+
   return (
     <div className='flex flex-col items-center justify-center mt-10 mb-20 space-y-4'>
       <h1 className='text-4xl'>React Speech Recognition App 🎧</h1>
-      <div>
-        <button
-          className='btn btn-primary'
-          onClick={startRecording}
-          disabled={isRecording}
-        >
-          Record
-        </button>
-        <button
-          className='btn btn-warning'
-          onClick={stopRecording}
-          disabled={!isRecording}
-        >
-          Stop
-        </button>
+      <div className='flex-btns'>
+        <audio ref={audioPlayer} src={blobURL} controls='controls' />
+        <div>
+          <button
+            className='btn btn-primary'
+            onClick={startRecording}
+            disabled={isRecording}
+          >
+            Record
+          </button>
+          <button
+            className='btn btn-warning'
+            onClick={stopRecording}
+            disabled={!isRecording}
+          >
+            Stop
+          </button>
+        </div>
       </div>
-      <input type='file' accept='audio/*' onChange={handleFileChange} />
-      <audio ref={audioPlayer} src={blobURL} controls='controls' />
-      <button
-        className='btn btn-secondary'
-        onClick={submitTranscriptionHandler}
-      >
-        Submit for Transcription
-      </button>
+
+      <div className='upload-btn-container'>
+        <button className='upload-button'>Upload a file</button>
+        <input type='file' accept='audio/*' onChange={handleFileChange} />
+      </div>
+      {selectedFile &&
+        'File ready for transcription, click on submit to transcribe.'}
 
       <div className='mt-4 w-full'>
         {uploadProgress > 0 && uploadProgress < 100 && (
           <div className='relative pt-1'>
             <div className='flex mb-2 items-center justify-between'>
-              <div>
-                <span className='text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-teal-600 bg-teal-200'>
-                  Upload Progress
-                </span>
-              </div>
               <div className='text-right'>
                 <span className='text-xs font-semibold inline-block text-teal-600'>
                   {uploadProgress}%
@@ -188,16 +174,22 @@ const App = () => {
               </div>
             </div>
             <div className='flex flex-col'>
-              <div className='bg-teal-200 rounded-full h-2'>
+              <div className='progress-wrapper'>
                 <div
+                  className='progress-bar'
                   style={{ width: `${uploadProgress}%` }}
-                  className='rounded-full bg-teal-500'
-                ></div>
+                />
               </div>
             </div>
           </div>
         )}
       </div>
+      <button
+        className='btn btn-secondary'
+        onClick={submitTranscriptionHandler}
+      >
+        Submit for Transcription
+      </button>
 
       {isLoading ? (
         <div>
